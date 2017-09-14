@@ -1,0 +1,95 @@
+<!DOCTYPE html> 
+<html>
+ 
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
+    <title>Mi primera página</title> 
+    <link rel="stylesheet" href="assets/css/jquery.mobile-1.4.5.min.css" />
+    <link rel="stylesheet" href="assets/css/jquery.mobile.structure-1.4.5.min.css" />
+    <link rel="stylesheet" href="assets/css/jquery.mobile.theme-1.4.5.min.css" />
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.mobile-1.4.5.min.js"></script>
+    <script type="text/javascript">
+    document.addEventListener("deviceready",onDeviceReady,false);
+    var db;
+    function onDeviceReady(){
+    	db = window.openDatabase("Database","1.0","Cordova Demo",2*1024*1024);
+    	db.transaction(createDB, errorCB,successCB);
+    }
+    function createDB(tx){
+    	tx.executeSql('DROP TABLE IF EXISTS DEMO');
+    	tx.executeSql('CREATE TABLE IF NOT EXITS DEMO (id unique,title,image,description)');
+    	
+    }
+    function errorCB(err){
+    	alert("Error processing SQL: "+err.code);
+    }
+    function successCB(){
+    	alert("YEAH!!!!!");
+    }
+    function insertDB(tx){
+    	var _title = $("[name='title']").val();
+    	var _image = $("[name='image']").val();
+    	var _description = $("[name='description']").val();
+    	var sql = 'INSERT INTO DEMO (title,image,description) VALUES(?,?,?)';
+    	tx.executeSql(sql,[_title,_image,_description],sucessQueryDB,errorCB);
+    }
+    function sucessQueryDB(tx){
+    	alert("query");
+    	tx.executeSql('SELECT * FROM DEMO',[],renderList,errorCB);
+    }
+    function renderList(tx,results){
+    	var htmlstring='';
+    	
+    	var len = results.rows.length;
+    	alert("rendemed called"+len);
+    	for (var i=0; i<len; i++){
+    		htmlstring += '<li>'+results.rows.item(i).title+'<br>'+
+    		results.rows.item(i).description+'<li>';
+    	}
+    	$('#resultList').html(htmlstring);
+    	$('#resultList').listview('refresh');
+    }
+    function submitForm(){
+    	db.transaction(insertDB,errorCB);
+    	$.mobile.changePage("#page2",{reverse:false,transition:"slide"});
+    	return false;
+    }
+    </script>
+</head> 
+ 
+<body> 
+
+<div data-role="page" id="page1">
+	<header data-role="header">
+	<h1>Pagina uno</h1>
+	</header>
+	<div data-role="content">
+		<form action="POST" onsubmit="return submitForm()" id="myForm" data-ajax="false">
+			<label for="title" class="ui-hidden-accessible">titulo:</label>
+			<input name="title" type="text" placeholder="nombretitulo">
+			<label for="image" class="ui-hidden-accessible">url Imagen:</label>
+			<input name="image" type="text" placeholder="nurl imagen">
+			<label for="description" class="ui-hidden-accessible">Decription:</label>
+			<input name="description" type="text" placeholder="descripcion">
+			<input  value="submit" type="submit">
+			 </form>
+	</div>
+		
+</div>
+
+<div data-role="page" id="page2" data-add-back-btn="true">
+	<header data-role="header">
+	<h1>Pagina Dos</h1>
+	</header>
+	<div data-role="content">
+		<div id="output">
+		<ul data-role="Listview" id="resultList"></ul>
+		</div>
+	</div>
+		
+</div>
+
+</body>
+</html>

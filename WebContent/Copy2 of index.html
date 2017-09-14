@@ -1,0 +1,57 @@
+<!DOCTYPE html> 
+<html>
+ 
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
+    <title>Mi primera página</title> 
+    <link rel="stylesheet" href="assets/css/jquery.mobile-1.4.5.min.css" />
+    <link rel="stylesheet" href="assets/css/jquery.mobile.structure-1.4.5.min.css" />
+    <link rel="stylesheet" href="assets/css/jquery.mobile.theme-1.4.5.min.css" />
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.mobile-1.4.5.min.js"></script>
+    <script type="text/javascript">
+    function submitForm(){
+    	var uname=$("[name='username']").val();
+    	var email=$("[name='email']").val();
+    	
+    	window.localStorage.setItem('username',uname);
+    	window.localStorage['email']=email;
+    	
+    	$.mobile.changePage("#page2",{reverse:false,transition:"slide"});
+    	$('#output').html("Username: "+window.localStorage.getItem("username")+"<br>"+
+    			"Email: " + window.localStorage['email']);
+    	
+    	return false;
+    }
+    </script>
+</head> 
+ 
+<body> 
+
+<div data-role="page" id="page1">
+	<header data-role="header">
+	<h1>Pagina uno</h1>
+	</header>
+	<div data-role="content">
+		<form action="POST" onsubmit="return submitForm()" data-ajax="false">
+			<label class="ui-hidden-accessible">NombreUsuario:</label><input name="username" type="text" placeholder="nombre usuario..">
+			<label class="ui-hidden-accessible">email:</label><input name="email" type="text">
+			<input name="Submit" value="Ingresar" type="submit">
+			 </form>
+	</div>
+		
+</div>
+
+<div data-role="page" id="page2" data-add-back-btn="true">
+	<header data-role="header">
+	<h1>Pagina Dos</h1>
+	</header>
+	<div data-role="content">
+		<div id="output"></div>
+	</div>
+		
+</div>
+
+</body>
+</html>
