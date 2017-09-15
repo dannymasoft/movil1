@@ -13,8 +13,6 @@ xmlns:cdv="http://cordova.apache.org/ns/1.0"
     Me
 </author>
 <content src="index.html" />
-<access origin="*" />
-<preference name="phonegap-version" value="3.0.0" />
-<cdv:plugin name="http://cordova.apache.org/ns/1.0" />
+
 
 </widget>
